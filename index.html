@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BOT-DROP - Face Capture and Food Menu</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        #cursor {
+            height: 10px;
+            width: 10px;
+            background-color: #2e8ef4;
+            border-radius: 50%;
+            position: fixed;
+            z-index: 1;
+            transition: all linear .1s;
+        }
+        #cursor-blur {
+            height: 300px;
+            width: 300px;
+            background-color: #93beec;
+            border-radius: 50%;
+            position: fixed;
+            filter: blur(100px);
+            z-index: 0;
+            transition: all linear 0.05s;
+        }
+
+        :root {
+            --box-shadow: 0rem 1.5rem 1rem rgba(0,0,0,.3);
+            --border: .1rem solid rgba(0,0,0,.1);
+            --outline: 0.5rem solid rgba(0,0,0,.1);
+            --outline-hover: 0.8rem solid rgb(210, 210, 210);
+        }
+
+        * {
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 0;
+            padding: 0;
+            border: none;
+            text-decoration: none;
+            text-transform: capitalize;
+            transition: all 0.3s linear;
+            color: black;
+        }
+
+        .container {
+            text-align: center;
+            background-color: azure;
+            padding: 30px;
+            margin: 10px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1, h2, h3 {
+            margin: 2rem;
+            color: #333333;
+        }
+
+        .video-container {
+            margin: 20px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0;
+        }
+
+        video {
+            border-radius: 20px;
+            border: .7rem solid #007BFF;
+        }
+
+        .buttons {
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 12px 24px;
+            margin: 10px;
+            font-size: 18px;
+            background-color: #007BFF;
+            color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+            transform: scale(1.1);
+            font-size: 20px;
+            font-weight: 300;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        input[type="text"], input[type="number"] {
+            padding: 10px;
+            margin: 5px;
+            font-size: 16px;
+            border: 1px solid #cccccc;
+            border-radius: 5px;
+        }
+
+        #calculateTotal {
+            margin: 2rem;
+        }
+
+        .menu-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .menu-item {
+            width: 200px;
+            display: flex;
+            flex-direction: column;
+            padding: 10px;
+            align-items: center;
+            justify-content: center;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            outline: var(--outline);
+            transition: outline 0.3s, transform 0.3s, box-shadow 0.3s;
+            margin: .5rem;
+        }
+
+        .menu-item:hover {
+            outline: var(--outline-hover);
+            transform: scale(1.05);
+            box-shadow: var(--box-shadow);
+            width: 210px;
+        }
+
+        .menu-item img {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 10px;
+        }
+
+        .menu-item img:hover {
+            width: 120px;
+            height: 120px;
+            margin-bottom: 10px;
+        }
+
+        .menu-item span {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 16px;
+            color: #333333;
+        }
+
+        #totalCost {
+            font-size: 20px;
+            color: #333333;
+        }
+
+        #message {
+            font-size: 20px;
+            color: green;
+        }
+
+        .container h1 span, .container h2 span {
+            background: #2383ea;
+            color: white;
+            display: inline-block;
+            padding: 0.5rem 3rem;
+            clip-path: polygon(100% 0, 90% 50%, 100% 100%, 0% 100%, 10% 50%, 0% 0%);
+        }
+    </style>
+</head>
+<body>
+    <div id="cursor"></div>
+    <div id="cursor-blur"></div>
+
+    <div class="container">
+        <h1><span>BOT-DROP</span></h1>
+        <p>Please fill in your details</p>
+        <div class="video-container">
+            <video id="video" width="640" height="480" autoplay></video>
+            <canvas id="canvas" width="640" height="480" style="display:none;"></canvas>
+            <img id="capturedImage" style="display:none; max-width: 100%; border-radius: 10px;" />
+        </div>
+        
+        <div class="buttons">
+            <button id="capture">Capture Image</button>
+            <button id="inputName">Input Name</button>
+        </div>
+        
+        <div id="nameInputContainer" style="display:none;">
+            <input type="text" id="name" placeholder="Enter your name" required>
+        </div>
+
+        <div id="message" style="display:none;">Image has been captured</div>
+    
+        <h2><span>Food Menu</span></h2>
+        <div class="menu-container">
+            <div class="menu-item">
+                <img src="https://5.imimg.com/data5/SELLER/Default/2021/3/UT/EO/OR/124483753/250-ml-thums-up-carbonated-drinks.jpg" alt="Juice">
+                <span>Juice - INR 10.00</span>
+                <input type="number" id="juiceQty" min="0" value="0">
+            </div>
+            <div class="menu-item">
+                <img src="https://t4.ftcdn.net/jpg/03/21/32/45/360_F_321324549_3utrdpZOFdsyUElymaPhm5LXRyTpnteh.jpg" alt="Burger">
+                <span>Burger - INR 50.00</span>
+                <input type="number" id="burgerQty" min="0" value="0">
+            </div>
+            <div class="menu-item">
+                <img src="https://5.imimg.com/data5/EQ/KY/ZS/SELLER-97071132/lays.jpg" alt="Chips">
+                <span>Chips - INR 20.00</span>
+                <input type="number" id="chipsQty" min="0" value="0">
+            </div>
+            <div class="menu-item">
+                <img src="https://images-cdn.ubuy.com.sa/63a33bb51010b23660165bd3-cadbury-dairy-milk-200-g.jpg" alt="Chocolate">
+                <span>Chocolate - INR 10.00</span>
+                <input type="number" id="chocolateQty" min="0" value="0">
+            </div>
+            <div class="menu-item">
+                <img src="https://5.imimg.com/data5/SELLER/Default/2021/3/UT/EO/OR/124483753/250-ml-thums-up-carbonated-drinks.jpg" alt="Juice">
+                <span>Thumps-Up - INR 15.00</span>
+                <input type="number" id="thumbsUpQty" min="0" value="0">
+            </div>
+            <div class="menu-item">
+                <img src="https://t4.ftcdn.net/jpg/03/21/32/45/360_F_321324549_3utrdpZOFdsyUElymaPhm5LXRyTpnteh.jpg" alt="Burger">
+                <span>Miranda - INR 10.00</span>
+                <input type="number" id="mirandaQty" min="0" value="0">
+            </div>
+            <div class="menu-item">
+                <img src="https://5.imimg.com/data5/EQ/KY/ZS/SELLER-97071132/lays.jpg" alt="Chips">
+                <span>Dew - INR 20.00</span>
+                <input type="number" id="dewQty" min="0" value="0">
+            </div>
+            <div class="menu-item">
+                <img src="https://images-cdn.ubuy.com.sa/63a33bb51010b23660165bd3-cadbury-dairy-milk-200-g.jpg" alt="Chocolate">
+                <span>Sprite - INR 10.00</span>
+                <input type="number" id="spriteQty" min="0" value="0">
+            </div>
+        </div>
+
+        <button id="calculateTotal">Calculate Total</button>
+        <p id="totalCost">Total Cost: INR 0.00</p>
+    </div>
+
+    <script>
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const capturedImage = document.getElementById('capturedImage');
+        const captureButton = document.getElementById('capture');
+        const nameInputContainer = document.getElementById('nameInputContainer');
+        const totalCostElement = document.getElementById('totalCost');
+        const messageElement = document.getElementById('message');
+
+        // Start video stream from webcam
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => {
+                video.srcObject = stream;
+            })
+            .catch(error => {
+                console.error('Error accessing the webcam', error);
+            });
+
+        captureButton.addEventListener('click', () => {
+            canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+            const imageData = canvas.toDataURL('image/png');
+            capturedImage.src = imageData;
+            capturedImage.style.display = 'block';
+            messageElement.style.display = 'block';
+        });
+
+        // Calculate total cost based on quantities
+        document.getElementById('calculateTotal').addEventListener('click', () => {
+            const juiceQty = parseInt(document.getElementById('juiceQty').value) || 0;
+            const burgerQty = parseInt(document.getElementById('burgerQty').value) || 0;
+            const chipsQty = parseInt(document.getElementById('chipsQty').value) || 0;
+            const chocolateQty = parseInt(document.getElementById('chocolateQty').value) || 0;
+            const thumbsUpQty = parseInt(document.getElementById('thumbsUpQty').value) || 0;
+            const mirandaQty = parseInt(document.getElementById('mirandaQty').value) || 0;
+            const dewQty = parseInt(document.getElementById('dewQty').value) || 0;
+            const spriteQty = parseInt(document.getElementById('spriteQty').value) || 0;
+
+            const totalCost = (juiceQty * 10) + (burgerQty * 50) + (chipsQty * 20) + (chocolateQty * 10) + (thumbsUpQty * 15) + (mirandaQty * 10) + (dewQty * 20) + (spriteQty * 10);
+            totalCostElement.textContent = 'Total Cost: INR ' + totalCost.toFixed(2);
+        });
+    </script>
+</body>
+</html>

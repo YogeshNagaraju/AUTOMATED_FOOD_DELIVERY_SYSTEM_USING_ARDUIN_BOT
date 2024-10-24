@@ -1,0 +1,144 @@
+:root {
+    --box-shadow: 0rem 1.5rem 1rem rgba(0,0,0,.3);
+    --border: .1rem solid rgba(0,0,0,.1);
+    --outline: 0.5rem solid rgba(0,0,0,.1);
+    --outline-hover: 0.8rem solid rgb(210, 210, 210);
+}
+
+* {
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0;
+    padding: 0;
+    border: none;
+    text-decoration: none;
+    text-transform: capitalize;
+    transition: all 0.3s linear;
+    color: black;
+}
+
+.container {
+    text-align: center;
+    background-color: azure;
+    padding: 30px;
+    margin: 10px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1, h2, h3 {
+    margin: 2rem;
+    color: #333333;
+}
+
+.video-container {
+    margin: 20px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+}
+
+video {
+    border-radius: 20px;
+    border: .7rem solid #007BFF;
+}
+
+.buttons {
+    margin-bottom: 20px;
+}
+
+button {
+    padding: 12px 24px;
+    margin: 10px;
+    font-size: 18px;
+    background-color: #007BFF;
+    color: #ffffff;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+}
+
+button:hover {
+    background-color: #0056b3;
+    transform: scale(1.1);
+    font-size: 20px;
+    font-weight: 300;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+input[type="text"], input[type="number"] {
+    padding: 10px;
+    margin: 5px;
+    font-size: 16px;
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+}
+#calculateTotal {
+    margin: 2rem;
+}
+
+.menu-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+.menu-item {
+    width: 200px;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    outline: var(--outline);
+    transition: outline 0.3s, transform 0.3s, box-shadow 0.3s;
+    margin: 0.5rem;
+}
+
+.menu-item:hover {
+    outline: var(--outline-hover);
+    transform: scale(1.05);
+    box-shadow: var(--box-shadow);
+}
+
+.menu-item img {
+    width: 100px;
+    height: 100px;
+    margin-bottom: 10px;
+}
+
+.menu-item img:hover {
+    width: 120px;
+    height: 120px;
+    margin-bottom: 10px;
+}
+
+.menu-item span {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 16px;
+    color: #333333;
+}
+
+#totalCost {
+    font-size: 20px;
+    color: #333333;
+}
+
+#message {
+    font-size: 20px;
+    color: green;
+}
+
+.container h1 span, .container h2 span {
+    background: #2383ea;
+    color: white;
+    display: inline-block;
+    padding: 0.5rem 3rem;
+    clip-path: polygon(100% 0, 90% 50%, 100% 100%, 0% 100%, 10% 50%, 0% 0%);
+}
